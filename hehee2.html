@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chocolate Day for Ishana 🍫</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, #2b0b14, #3d0f1f);
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .screen {
+            min-height: 100vh;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        
+        .screen.active {
+            display: flex
+        }
+        
+        .card {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 22px;
+            padding: 22px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .4);
+        }
+        
+        h1,
+        h2 {
+            color: #ffd6e3
+        }
+        
+        p {
+            color: #ffe9f1;
+            line-height: 1.6
+        }
+        
+        button {
+            background: #b1124c;
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 14px;
+        }
+        /* Chocolate grid */
+        
+        .chocos {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .chocos img {
+            width: 100%;
+            border-radius: 16px;
+            cursor: pointer
+        }
+        /* Special moments */
+        
+        .moments {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px
+        }
+        
+        .moments img {
+            width: 100%;
+            border-radius: 14px
+        }
+        /* Modal */
+        
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10
+        }
+        
+        .modal.active {
+            display: flex
+        }
+        /* Falling emojis */
+        
+        .fall {
+            position: fixed;
+            top: -40px;
+            font-size: 26px;
+            animation: fall linear infinite;
+            opacity: .8
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg)
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <audio id="bgMusic" loop>
+  <source src="music/chocolate.mp3" type="audio/mpeg">
+</audio>
+
+    <!-- Screen 1 -->
+    <section id="s1" class="screen active">
+        <div class="card">
+            <h1>Happy Chocolate Day 🍫</h1>
+            <h2>Ishana</h2>
+            <p>I made something sweet for you… tap to begin 💖</p>
+            <button onclick="start()">Open 🍫</button>
+        </div>
+    </section>
+
+    <!-- Screen 2: Chocolates -->
+    <section id="s2" class="screen">
+        <div class="card">
+            <h2>A Box of Chocolates 🍫</h2>
+            <p>Each chocolate hides a feeling</p>
+            <div class="chocos">
+                <img src="images/choco1.jpg" onclick="openMsg(0)">
+                <img src="images/choco2.jpg" onclick="openMsg(1)">
+                <img src="images/choco3.jpg" onclick="openMsg(2)">
+                <img src="images/choco4.jpg" onclick="openMsg(3)">
+            </div>
+            <button onclick="go(3)">Next 💕</button>
+        </div>
+    </section>
+
+    <!-- Screen 3: Special Moments -->
+    <section id="s3" class="screen">
+        <div class="card">
+            <h2>Special Moments 📸🍫</h2>
+            <p>Some memories + some chocolates around them</p>
+            <div class="moments">
+                <!-- CHANGE THESE 4 IMAGES -->
+                <img src="images/m1.jpg">
+                <img src="images/m2.jpg">
+                <img src="images/m3.jpg">
+                <img src="images/m4.jpg">
+            </div>
+            <p>Every moment with you feels sweeter 🍫💖</p>
+            <button onclick="go(4)">Final 💌</button>
+        </div>
+    </section>
+
+    <!-- Screen 4: Final Message -->
+    <section id="s4" class="screen">
+        <div class="card">
+            <h1>For You, Ishana 💖</h1>
+            <p>
+                Just like chocolate, you make life a little sweeter, a little warmer, and a lot happier.
+            </p>
+            <button onclick="missMe()">Tell me when you miss me 💭</button>
+            <p id="miss"></p>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div id="modal" class="modal" onclick="closeMsg()">
+        <div class="card" onclick="event.stopPropagation()">
+            <h2 id="mt"></h2>
+            <p id="mb"></p>
+            <button onclick="closeMsg()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const msgs = [{
+            t: 'Dark Chocolate 🍫',
+            m: 'Strong, deep, and comforting — just like you.'
+        }, {
+            t: 'Milk Chocolate 🍫',
+            m: 'Sweet, soft, and impossible not to love.'
+        }, {
+            t: 'White Chocolate 🍫',
+            m: 'Rare and special, just like our bond.'
+        }, {
+            t: 'Hazelnut Chocolate 🍫',
+            m: 'A little surprise inside — like your smile.'
+        }];
+
+        function go(n) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('s' + n).classList.add('active');
+        }
+
+        function start() {
+            document.getElementById('bgMusic').play();
+            go(2)
+        }
+
+        function openMsg(i) {
+            modal.classList.add('active');
+            mt.textContent = msgs[i].t;
+            mb.textContent = msgs[i].m
+        }
+
+        function closeMsg() {
+            modal.classList.remove('active')
+        }
+
+        function missMe() {
+            const a = ['Sending you chocolate hugs 🍫🤍', 'Thinking of you right now 💕', 'You’re my favorite kind of sweet 😊', 'Always here for you 💖'];
+            miss.textContent = a[Math.floor(Math.random() * a.length)];
+        }
+        // Falling hearts & chocolates
+        const items = ['❤️', '🍫', '💖', '🤎'];
+        for (let i = 0; i < 18; i++) {
+            let f = document.createElement('div');
+            f.className = 'fall';
+            f.textContent = items[Math.floor(Math.random() * items.length)];
+            f.style.left = Math.random() * 100 + 'vw';
+            f.style.animationDuration = 6 + Math.random() * 6 + 's';
+            document.body.appendChild(f);
+        }
+    </script>
+</body>
+
+</html>
